@@ -24,7 +24,7 @@
 	}
 	void Debug::in(const std::string & s)
 	{
-		fout << s.c_str() << '\n';
+		fout << s.c_str() << ' ';
 		fout.flush();
 	}
 	Debug & Debug::operator<<(QString & st)
@@ -34,7 +34,7 @@
 	}
 	Debug & Debug::operator<<(const char * chs)
 	{
-		fout << chs << '\n';
+		fout << chs ;
 		fout.flush();
 		return *this;
 	}

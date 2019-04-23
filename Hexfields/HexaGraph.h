@@ -19,6 +19,19 @@ struct WeightedCoord
 };
 static bool operator<(const WeightedCoord & f, const WeightedCoord & s) { return f.weight < s.weight; };
 static bool operator>(const WeightedCoord & f, const WeightedCoord & s) { return f.weight > s.weight; };
+static std::string serialize(WeightedCoord & wcoord)
+{
+		std::ostringstream sout;
+		sout << wcoord.coord.toStr() << wcoord.weight << '\n';
+		return sout.str();
+}
+static WeightedCoord deserialize(std::string & str)
+	{
+		std::istringstream sin(str);
+		int x, z, y, w;
+		sin >> x >> z >> y >> w;
+		return WeightedCoord({ ICube(x,z,y), w });
+	}
 class HexaGraph
 {
 private:
@@ -28,6 +41,8 @@ private:
 public:
 	HexaGraph(QMap<ICube, int> * wghtmap);
 	std::string getDescription() const;
+	bool insertHeight(WeightedCoord & wc);
+	bool removeHeight(const ICube & key);
 	QSet<ICube> neighbours(const ICube &) const;
 	QVector<ICube> BreadthFirstSearch(const ICube & start, const ICube & finish) const;
 	QVector<ICube> DijkstraSearch(const ICube & start, const ICube & finish, const int max_cost=0);

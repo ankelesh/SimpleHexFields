@@ -2,6 +2,27 @@
 #include <cmath>
 #include <qpoint.h>
 
+/*
+		This file contains tools helping with defining dots on the screen and draw hexagons
+		contains:	
+			namespace:
+				HexCoords
+				structs:
+					hexagonDrawOptions	:	holds draw options - colors and border width
+				classes:
+					Hexagon				:	main class representing hexagon as it's center and precalced polygon
+				functions:	
+					find_corner()		:	finds corner of hex with given width and center
+					hex_width()			:	calculates width using hex size value
+					hex_height()		:	same
+				Hexagon methods:
+					getters/setters		:	text, text place, tag, options, Polygon
+				constants:
+					HEX_DEFAULTS		:	default settings for plain white hexagon
+*/
+
+
+
 namespace HexCoords
 {
 	struct hexagonDrawOptions
@@ -17,9 +38,6 @@ namespace HexCoords
 		QColor(Qt::black),
 		1
 		});
-
-
-
 	class Hexagon
 	{
 	private:

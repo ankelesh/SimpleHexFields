@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "HexfieldWidget.h"
+#include <TestsGui.h>
 #include "CubeCoords.h"
+#include <HexRedactor.h>
 #include <QtWidgets/QApplication>
-#include "HexaGraph.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,12 +18,11 @@ int main(int argc, char *argv[])
 		,ICube(3,0,-3),ICube(4,0,-4), ICube(1,1,-2)
 		,ICube(3,1,-4),ICube(2,2,-4), ICube(3,2,-5)
 		,ICube(0,2,-2),ICube(1,2,-3),ICube(0,3,-3)
-
-
 		});
 	hexagonDrawOptions lineopts = hexagonDrawOptions({ QColor(Qt::red), QColor(Qt::black), 1 });
-	PathfindTestGui * phtg = new PathfindTestGui(holeyHexField, QSize(500, 500), lineopts);
-	phtg->show();
-	debug << testDijkstra(holeyHexField, ICube(0,0,0), ICube(3,2,-5));
+	//PathfindTestGui * phtg = new PathfindTestGui(std::string("weightsmap.txt"), QSize(500, 500), lineopts);
+	//phtg->show();
+	HexRedactor * redactor = new HexRedactor(std::string("weightsmap.txt"), QSize(500, 500), HEX_DEFAULTS);
+	redactor->show();
 	return a.exec();
 }

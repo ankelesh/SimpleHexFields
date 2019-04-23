@@ -6,14 +6,56 @@
 #include <sstream>
 #include "debug.h"
 
+/*
+				This file defines template for hexagonal coordinate class
+					namespace: HexCoords
+						contains classes:
+							CubeCoords<Number> : main templated class
+						constants:
+							hash_multiplier_x\y\z : these constants are defining range of unique hash values	
+							directions			:	this array contains value of neighboring coordinate on 
+													direction dir
+							diagonals			:	same as directions, only for diagonals
+						exceptions:
+							bad_coordinates_exceptions	:	Cube coordinate must be (x+z+y) = 0
+						enum:	
+							CubeDirections	:	represent offset in direction\diagonal arrays
+						types:
+							ICube			:	CubeCoords<int>	-	represents quick general use coordinate
+							FloatCube		:	CubeCoords<double>	-	represents algorythm-specific
+													coordinate which can accumulate fractional part
+
+	CubeCoords<Number> methods:
+		overloaded:
+			+,-, +=, -=, <, ==,=
+		Constructors:
+			(), (CubeCoords<Number>), (CubeCoords<Another number>), (Number,Number,Number)
+		general use algorythms:
+			distanceTo(Coordinate)	:	returns int of manhattan lenght between this and other coord
+			createLine(Coordinate)	:	returns std::vector of line between this and other coord
+			fromCenterInRange(int)	:	returns std::vector containing field with this coord in center of given radius
+		conversions:
+			toPixel(...)				:	returns conversion to flat 2D coordinates
+			fromPixels(x,y)				:	sets this coordinate to converted from 2D coordinates
+		utils:
+			hash()					:	returns hash of coordinate affected by constants hash_multiplier
+			getX/Y/Z()				:	getters
+			roundThis()				:	rounds this coord
+			rounded()				:	returns this coord rounded, leaving original unaffected
+			CubeLinearInterpolation	:	returns interpolated coordinate
+			neighbor(dir)			:	returns neighbor on direction
+			diagonal(dir)			:	returns diagonal on direction 
+			toStr()					:	returns string view of coordinate
+*/
+
 
 
 
 namespace HexCoords {
 
-	static const int hash_multiplier_x = 100000000;
-	static const int hash_multiplier_y = 10000;
-	static const int hash_multiplier_z = 1;
+	static const double hash_multiplier_x = 1000000000;
+	static const double hash_multiplier_y = 40000;
+	static const double hash_multiplier_z = 10;
 
 	class bad_coordinates_exception : std::exception
 	{
@@ -85,7 +127,7 @@ namespace HexCoords {
 		void roundThis();
 		CubeCoords<Number> neighbor(const CubeDirections & dir) const;
 		CubeCoords<Number> diagonal(const CubeDirections & dir) const;
-		std::pair<int, int> toPixel(const int & size, const bool & pointy);
+		std::pair<int, int> toPixel(const int & size, const bool & pointy) const;
 		void fromPixel(const int & pixel_x, const int & pixel_y,
 			const int & size, const int & coords_offset_x, const int & coords_offset_y, const bool pointy);
 		std::string toStr() const;
@@ -103,7 +145,7 @@ namespace HexCoords {
 	CubeCoords<Number>::CubeCoords(const Number & cx, const Number & cz, const Number & cy)
 		: x(cx), y(cy), z(cz)
 	{
-		if ((int)(x + y + z)) throw bad_coordinates_exception();
+		if ((int)(x + y + z)) throw bad_coordinates_exception();	//if sum equals other number, it guides to other plane
 	}
 	template<class Number>
 	CubeCoords<Number>::CubeCoords(const CubeCoords<Number> & second)
@@ -312,14 +354,14 @@ namespace HexCoords {
 		}
 	}
 	template <class Number>
-	std::pair<int, int> CubeCoords<Number>::toPixel(const int & size,const bool & pointy)
+	std::pair<int, int> CubeCoords<Number>::toPixel(const int & size,const bool & pointy) const
 	{
 		int axial_x = (int)x, axial_y = (int)z;
 		double pixel_x = (pointy) ? (sqrt(3) * axial_x + sqrt(3) / 2 * axial_y) * size
 			: (3.0/2.0 * axial_x) * size;
 		double pixel_y = (pointy) ? (3.0 / 2.0 * axial_y) * size
 			: (sqrt(3) / 2 * axial_x + sqrt(3) * axial_y) * size;
-		return std::pair<int, int>({ pixel_x, pixel_y });
+		return std::pair<int, int>({ (int)pixel_x, (int)pixel_y });
 	}
 	template <class Number>
 	void CubeCoords<Number>::fromPixel(const int & pxl_x, const int & pxl_y,

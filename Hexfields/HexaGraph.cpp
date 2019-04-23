@@ -135,3 +135,42 @@ QVector<ICube> HexaGraph::DijkstraSearch(const ICube & start, const ICube & fini
 	return path;
 
 }
+bool HexaGraph::insertHeight(WeightedCoord & wc)
+{
+	if (!WeightedCoords->contains(wc.coord))
+	{
+		WeightedCoords->insert(wc.coord, wc.weight);
+		heights.insert(wc.coord);
+		QSet<ICube> temp;
+		for (int i = 0; i < 6; ++i)
+		{
+			ICube neigCoord = wc.coord.neighbor((HexCoords::CubeDirections)i);
+			//debug <<"\n\t"<< neigCoord.toStr();
+			if (WeightedCoords->contains(neigCoord))
+			{
+				temp.insert(neigCoord);
+			}
+		}
+		edges.insert(wc.coord, temp);
+		return true;
+	}
+	return false;
+}
+bool HexaGraph::removeHeight(const ICube & key)
+{
+	if (WeightedCoords->contains(key))
+	{
+		WeightedCoords->remove(key);
+		auto neighbours = edges[key];
+		auto begin = neighbours.begin();
+		while (begin != neighbours.end())
+		{
+			edges[*begin].remove(key);
+			++begin;
+		}
+		heights.remove(key);
+		edges.remove(key);
+		return true;
+	}
+	return false;
+}

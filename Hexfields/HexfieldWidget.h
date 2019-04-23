@@ -11,7 +11,7 @@ using namespace HexCoords;
 class HexfieldWidget : public QWidget
 {
 	Q_OBJECT
-private:
+protected:
 	HexCubeMap map;
 	int hexsize;
 	QMap<QString, hexagonDrawOptions> drawOptions;
@@ -29,35 +29,29 @@ public:
 signals:
 	void clicked(bool left, int x, int y);
 };
-class LineTestGui : public QWidget
+class WeightedMapWidget : public QWidget
 {
 	Q_OBJECT
-private:
-	QHBoxLayout * mainLayout;
-	HexfieldWidget * hexfield;
-	QLabel * coordView;
-	ICube start;
-	hexagonDrawOptions lineopts;
-	int hex_sz;
+protected:
+	int hexsize;
+	QPoint offset; 
+	HexWeightedMap map;
 public:
-	LineTestGui(QList<ICube> hlist, int size, QSize widgetsz, hexagonDrawOptions lo, QWidget * parent = Q_NULLPTR);
-public slots:
-	void click_received(bool left, int x, int y);
+	WeightedMapWidget(weightedmap & wm, const int & size, const QSize & widgetSize, QWidget *parent = Q_NULLPTR);
+	WeightedMapWidget(std::string & fname, const int & size, const QSize & widgetSize, QWidget *parent = Q_NULLPTR);
+	void setTestWidgetView();
+	void drawLine(ICube start, ICube finish, hexagonDrawOptions & options);
+	void drawOneHex(ICube at, hexagonDrawOptions & options);
+	void paintEvent(QPaintEvent * qpe);
+	void mousePressEvent(QMouseEvent * qme);
+	QPoint getOffset() { return offset; }
+	void dropField() { map.dropOpts(HEX_DEFAULTS); }
+	HexaGraph & getGraph() { return map.getGraph(); };
+	bool hasHex(const ICube & ic) { return map.contains(ic); };
+	HexWeightedMap & getMap() {
+		return map;
+	};
+signals:
+	void clicked(bool left, int x, int y);
 };
-class PathfindTestGui : public QWidget
-{
-	Q_OBJECT
-private:
-	QHBoxLayout * mainLayout;
-	HexfieldWidget * hexfield;
-	QPushButton * stepButton;
-	hexagonDrawOptions lineopts;
-	ICube start;
-	QMap<ICube, int> weightedField;
-	QList<ICube> path;
-public:
-	PathfindTestGui(QList<ICube> hlist, QSize widgetsz, hexagonDrawOptions lo, QWidget * parent = Q_NULLPTR);
-public slots:
-	void step_asked();
-	void click_received(bool left, int x, int y);
-};
+

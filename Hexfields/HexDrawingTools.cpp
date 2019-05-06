@@ -19,10 +19,31 @@ namespace HexCoords
 	{
 		return (pointy) ? 2 * size : hex_width(size, true);
 	}
+	QPolygon makeArrow(const QPoint & center, const int size, const CubeDirections direction, const bool pointy)
+	{
+		
+		QVector<QPoint> pnts;
+		pnts.push_back(find_corner(center, size* 0.85, direction, !pointy)); //top
+		QPoint bot = (find_corner(center, size * 0.6, direction, !pointy));
+		//QPoint root = (find_corner(center, size * 0.2, direction, !pointy));
+		CubeDirections ldir = (CubeDirections)
+			((direction + 2 > 5) ? direction - 4 : direction + 2);
+		CubeDirections rdir = (CubeDirections)
+			((direction -1 < 0) ? direction +5 : direction -1);
+		pnts.push_back(find_corner(center, size* 0.85, direction, !pointy)); //top
+		pnts.push_back(find_corner(bot, size *0.3, rdir, pointy)); //right
+		//pnts.push_back(find_corner(bot, size * 0.05, rdir, pointy));
+		//pnts.push_back(find_corner(root, size * 0.05, rdir, pointy)); //bottom rect
+		//pnts.push_back(find_corner(root, size * 0.05, ldir, pointy));
+		//pnts.push_back(find_corner(bot, size * 0.05, ldir, pointy));
+		pnts.push_back(find_corner(bot, size*0.3, ldir, pointy)); //left
+		return QPolygon(pnts);
+	}
 	Hexagon::Hexagon(const QPoint & Center, const int & Size, const int & coord_start_offset_x,
 		const int & coord_start_offset_y
 		, hexagonDrawOptions & options, const bool & Pointy, const QString & txt, const QString & tg)
 		: polygon(), pointy(Pointy), center(Center),size(Size), opts(options), text(txt), tag(tg)
+		,direction(None)
 	{
 		center.rx() += coord_start_offset_x;
 		center.ry() += coord_start_offset_y;
@@ -66,7 +87,7 @@ namespace HexCoords
 	}
 	QPoint  Hexagon::get_text_place()
 	{
-		return QPoint(center.x() - size / 2, center.y()+ size/5);
+		return QPoint(center.x() - size / 2, center.y()- size * 0.5);
 	}
 	QString Hexagon::get_text()
 	{
@@ -74,7 +95,7 @@ namespace HexCoords
 	}
 	void	Hexagon::set_text(const QString & st)
 	{
-		text = st;
+		text = st; text_changed = true;
 	}
 	Hexagon & Hexagon::operator=(const Hexagon & hg)
 	{

@@ -1,4 +1,5 @@
 #pragma once
+#include "CubeCoords.h"
 #include <cmath>
 #include <qpoint.h>
 
@@ -48,6 +49,8 @@ namespace HexCoords
 		hexagonDrawOptions opts;
 		QString text;
 		QString tag;
+		CubeDirections direction;
+		bool text_changed;
 	public: 
 		Hexagon(const QPoint & center, const int & size, const int & coord_start_offset_x, const int & coord_start_offset_y
 		, hexagonDrawOptions & options, const bool & pointy = true, const QString & txt = "", const QString & tg = "");
@@ -61,15 +64,19 @@ namespace HexCoords
 		QPoint  get_text_place();
 		QString get_text();
 		void	set_text(const QString &);
+		bool	isChanged() { return text_changed; };
 		QString get_tag() const { return tag; };
 		void set_tag(const QString & qs) { tag = qs; };
+		void set_dir(const CubeDirections d) { direction = d; };
+		CubeDirections get_dir() { return direction; }
 		Hexagon & operator=(const Hexagon & hg);
 	};
 	QPoint	find_corner(const QPoint & center, const int & size,
 				const int & corner_num,const bool & pointy = true);
 	int		hex_width(const int & size,const bool & pointy);
 	int		hex_height(const int & size,const bool & pointy);
-
-
+	QPolygon makeArrow(const QPoint & center, const int size,
+		const CubeDirections direction, const bool pointy);
+	
 
 }

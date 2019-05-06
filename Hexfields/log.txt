@@ -1,0 +1,1 @@
+Success Path contains 19  with coords  -3 10 -7   9 1 -10  Success Path contains 14  with coords  -3 10 -7   8 9 -17  Success Path contains 12  with coords  -3 10 -7   6 11 -17  Success Path contains 29  with coords  -3 10 -7   11 9 -20  Success Path contains 8  with coords  7 8 -15   9 3 -12  Success Path contains 11  with coords  7 8 -15   6 4 -10  

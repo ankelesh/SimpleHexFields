@@ -89,6 +89,14 @@ void HexCubeMap::dropOpts(hexagonDrawOptions & opts)
 		++begin;
 	}
 }
+void HexCubeMap::dropDirs() {
+	auto begin = core_storage.begin();
+	while (begin != core_storage.end())
+	{
+		begin->set_dir(None);
+		++begin;
+	}
+}
 HexWeightedMap::HexWeightedMap()
 	:	HexCubeMap(),  weights_storage(), graph(&weights_storage)
 {
@@ -117,6 +125,10 @@ HexWeightedMap::HexWeightedMap(const std::string & fname, const int size, QPoint
 			tweightcoord = deserialize(temp);
 			weights_storage.insert(tweightcoord.coord, tweightcoord.weight);
 		}
+	}
+	if (weights_storage.count() < 1)
+	{
+		weights_storage.insert(ICube(), 0);
 	}
 	auto begin = weights_storage.begin();
 	while (begin != weights_storage.end())
@@ -211,5 +223,12 @@ void HexWeightedMap::remove(const ICube & key)
 	{
 		core_storage.remove(key);
 		graph.removeHeight(key);
+	}
+}
+void HexCubeMap::setDirectionForOne(const ICube & coord, const CubeDirections cdir)
+{
+	if (core_storage.contains(coord))
+	{
+		core_storage[coord].set_dir(cdir);
 	}
 }

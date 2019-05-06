@@ -5,6 +5,8 @@
 #include <qvector.h>
 #include <sstream>
 #include <queue>
+#include <memory>
+#include <limits>
 
 using namespace HexCoords;
 static uint qHash(const ICube & key)
@@ -17,6 +19,21 @@ struct WeightedCoord
 	ICube coord;
 	int weight;
 };
+struct UniformPathfindResult
+{
+	bool success;
+	QVector<ICube> path;
+	QMap<ICube, ICube> came_from;
+	QMap<ICube, int> cost_so_far;
+};
+typedef std::unique_ptr<UniformPathfindResult> UniPFResult;
+static std::string showResults(UniPFResult & res)
+{
+	std::ostringstream sout;
+	sout << ((res->success) ? "Success" : "Fail") <<
+		" Path contains " << res->path.count();
+	return sout.str();
+}
 static bool operator<(const WeightedCoord & f, const WeightedCoord & s) { return f.weight < s.weight; };
 static bool operator>(const WeightedCoord & f, const WeightedCoord & s) { return f.weight > s.weight; };
 static std::string serialize(WeightedCoord & wcoord)
@@ -46,6 +63,12 @@ public:
 	QSet<ICube> neighbours(const ICube &) const;
 	QVector<ICube> BreadthFirstSearch(const ICube & start, const ICube & finish) const;
 	QVector<ICube> DijkstraSearch(const ICube & start, const ICube & finish, const int max_cost=0);
+	UniPFResult UniformBreadthFirst(const ICube & start, const ICube & finish) const;
+	UniPFResult UniformDijkstra(const ICube & start, const ICube & finish,
+		const int max_cost =std::numeric_limits<int>().max()) const;
+	UniPFResult UniformBestFirst(const ICube & start, const ICube & finish) const;
+	UniPFResult UniformAStar(const ICube & start, const ICube & finish,
+		const int max_cost = std::numeric_limits<int>().max());
 };
 
 

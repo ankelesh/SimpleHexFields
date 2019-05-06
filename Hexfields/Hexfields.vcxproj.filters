@@ -57,6 +57,15 @@
     <ClCompile Include="HexRedactor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="preset_demos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="redacted_demos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -77,6 +86,9 @@
     <ClInclude Include="HexaGraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Demo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="HexfieldWidget.h">
@@ -86,6 +98,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="HexRedactor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="preset_demos.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="redacted_demos.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

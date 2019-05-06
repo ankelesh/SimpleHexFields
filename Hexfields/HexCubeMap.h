@@ -34,7 +34,9 @@ public:
 	void setOptsForCoordList(const std::vector<ICube> & coordlist, hexagonDrawOptions & opts);
 	void setOptsForTag(const QString & tag, hexagonDrawOptions & opts);
 	void setOptsForOne(const ICube & coord, const hexagonDrawOptions & opts);
+	void setDirectionForOne(const ICube & coord, const CubeDirections cdir);
 	void dropOpts(hexagonDrawOptions & opts);
+	void dropDirs();
 };
 
 class HexWeightedMap : public HexCubeMap

@@ -65,7 +65,7 @@ namespace HexCoords {
 		};
 	};
 
-	enum CubeDirections { Righttop, Right, Rigthlow, Leftlow, Left, Lefttop };
+	enum CubeDirections { Right, Rigthlow, Leftlow, Left, Lefttop, Righttop ,None};
 	static const int directions[6][3]{
 		{1,-1,0}, {1,0,-1},
 		{0,1,-1}, {-1,1,0},
@@ -314,12 +314,12 @@ namespace HexCoords {
 	template<class Number>
 	CubeCoords<Number> CubeCoords<Number>::neighbor(const CubeDirections & dir) const
 	{
-		return *this + CubeCoords<Number>(directions[dir][0], directions[dir][1], directions[dir][2]);
+		return *this + CubeCoords<Number>(directions[dir][0], directions[dir][2], directions[dir][1]);
 	}
 	template<class Number>
 	CubeCoords<Number> CubeCoords<Number>::diagonal(const CubeDirections & dir) const
 	{
-		return *this + CubeCoords<Number>(diagonals[dir][0], diagonals[dir][1], diagonals[dir][2]);
+		return *this + CubeCoords<Number>(diagonals[dir][0], diagonals[dir][2], diagonals[dir][1]);
 	}
 	template<class Number>
 	long long int CubeCoords<Number>::hash() const
@@ -384,6 +384,58 @@ namespace HexCoords {
 			FloatCube tempcube(axial_q, axial_r, -axial_q - axial_r);
 			tempcube.roundThis();
 			x = tempcube.getX(); y = tempcube.getY(); z = tempcube.getZ();
+		}
+	}
+	template <class Number>
+	CubeDirections directionTo(const CubeCoords<Number> & fi, const CubeCoords<Number> & se)
+	{
+		CubeCoords<Number> temp = fi - se;
+		return guessDir(temp);
+	}
+	template <class Number>
+	CubeDirections guessDir(CubeCoords<Number> & coord)
+	{
+		switch (coord.getX())
+		{
+		case (1):
+			if (coord.getZ() == -1)
+				return Righttop;
+			return Right;
+		case (0):
+			if (coord.getZ() == 1)
+				return Rigthlow;
+			return Lefttop;
+		case (-1):
+			if (coord.getZ() == 0)
+				return Left;
+			return Leftlow;
+		default:
+			return None;
+		}
+	}
+	static CubeDirections reverseDirection(const CubeDirections cd)
+	{
+		return (cd == None) ? None : (
+			(cd - 3 < 0) ? (CubeDirections)(cd + 3) : (CubeDirections)(cd - 3));
+	}
+	static std::string directionToString(const CubeDirections cd)
+	{
+		switch (cd)
+		{
+		case (Right):
+			return "Right";
+		case(Left):
+			return "Left";
+		case(Righttop):
+			return "Righttop";
+		case (Lefttop):
+			return "Lefttop";
+		case(Rigthlow):
+			return "Rightlow";
+		case (Leftlow):
+			return "Leftlow";
+		default:
+			return "None";
 		}
 	}
 }

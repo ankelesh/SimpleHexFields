@@ -27,6 +27,7 @@ private:
 	hexagonDrawOptions lineopts;
 	ICube start;
 	QList<ICube> path;
+	QTimer * timer;
 public:
 	PathfindTestGui(QList<ICube> hlist, QSize widgetsz, hexagonDrawOptions lo, QWidget * parent = Q_NULLPTR);
 	PathfindTestGui(std::string & fname, QSize widgetsz, hexagonDrawOptions lo, QWidget * parent = Q_NULLPTR);
